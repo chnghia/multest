@@ -17,47 +17,52 @@
       $("div#results").hide();
       $.getJSON("<?php echo base_url("search"); ?>", {query: query, page: page}, function(result) {
 
-        $("div#results table").empty();
-        $("div#results ul.pagination").empty();
-        var table = "";
-        for (var i=0; i<result.data.length; i++) {
-          row = "<tr>";
-          row += "<td style=\"width:60px\"><div class=\"media-middle\">";
-          row += "<img class=\"media-object\" src=\"" + result.data[i]["profile_image_url"] + "\" alt=\"\">";
-          row += "</div></td>";
-          row += "<td style=\"width:100px\">" + result.data[i]["name"] + "</td>";
-          row += "<td>" + result.data[i]["text"] + "</td>";
-          row += "</tr>";
-          table += row;
-        }
-        $("div#results table").append(table);
-
-        var pre = "";
-        if (result.page == 1) {
-          pre += "<li class=\"disabled\"><a href=\"#\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>";
+        if (result.count == 0) {
+          $("div#results table").empty().append("<h3> no data </h3>");
         } else {
-          pre += "<li><a href=\"#\" onclick=\"post_search('"+query+"',"+ (result.page-1) +")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>";
-        }
-        var nex = "";
-        if (result.page == (Math.floor(result.count/result.limit)+1)) {
-          nex += "<li class=\"disabled\"><a href=\"#\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a></li>";
-        } else {
-          nex += "<li><a href=\"#\" onclick=\"post_search('"+query+"',"+ (result.page+1) +")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a></li>"; 
-       }
-
-
-        var paging = "";
-        paging += pre;
-        for (var i=0; i< Math.floor(result.count/result.limit)+1; i++) {
-          if ((i+1) == result.page) {
-            paging += "<li class=\"active\"><a href=\"#\">" + (i+1) + "<span class=\"sr-only\">(current)</span></a></li>";
-          } else {
-            paging += "<li><a href=\"#\" onclick=\"post_search('"+query+"',"+ (i+1) +")\" \">" + (i+1) + "</a></li>";
+          $("div#results table").empty();
+          $("div#results ul.pagination").empty();
+          var table = "";
+          for (var i=0; i<result.data.length; i++) {
+            row = "<tr>";
+            row += "<td style=\"width:60px\"><div class=\"media-middle\">";
+            row += "<img class=\"media-object\" src=\"" + result.data[i]["profile_image_url"] + "\" alt=\"\">";
+            row += "</div></td>";
+            row += "<td style=\"width:100px\">" + result.data[i]["name"] + "</td>";
+            row += "<td>" + result.data[i]["text"] + "</td>";
+            row += "</tr>";
+            table += row;
           }
-        }
-        paging += nex;
+          $("div#results table").append(table);
 
-        $("div#results ul.pagination").append(paging);
+          var pre = "";
+          if (result.page == 1) {
+            pre += "<li class=\"disabled\"><a href=\"#\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>";
+          } else {
+            pre += "<li><a href=\"#\" onclick=\"post_search('"+query+"',"+ (result.page-1) +")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>";
+          }
+          var nex = "";
+          if (result.page == (Math.floor(result.count/result.limit)+1)) {
+            nex += "<li class=\"disabled\"><a href=\"#\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a></li>";
+          } else {
+            nex += "<li><a href=\"#\" onclick=\"post_search('"+query+"',"+ (result.page+1) +")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a></li>"; 
+         }
+
+
+          var paging = "";
+          paging += pre;
+          for (var i=0; i< Math.floor(result.count/result.limit)+1; i++) {
+            if ((i+1) == result.page) {
+              paging += "<li class=\"active\"><a href=\"#\">" + (i+1) + "<span class=\"sr-only\">(current)</span></a></li>";
+            } else {
+              paging += "<li><a href=\"#\" onclick=\"post_search('"+query+"',"+ (i+1) +")\" \">" + (i+1) + "</a></li>";
+            }
+          }
+          paging += nex;
+
+          $("div#results ul.pagination").append(paging);
+        }
+
         setTimeout(function(){
           $("div#LoadingImage").hide();
           $("div#results").show();
